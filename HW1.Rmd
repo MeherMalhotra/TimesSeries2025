@@ -1,0 +1,118 @@
+---
+title: 'HW 1: Employee Survey Data Summary'
+author: Meher Malhotra
+output: html_document
+date: "2025-02-04"
+---
+
+```{r echo=FALSE}
+
+# Imported CSV file 
+
+Typical_Employee_Survey_Data <- read.csv("/Users/mehermalhotra/Documents/time\ series/Typical_Employee_Survey_Data.csv",header = FALSE)
+
+str(Typical_Employee_Survey_Data)
+
+# Header row
+
+names(Typical_Employee_Survey_Data) <- c("Age", "Gender", "Satisfaction_Rating", "Job_Priority", "Years_Employed", "Promotion_Outlook", "Autonomy_Rating", "Budget_Involvement", "Pride_Rating", "Loyalty_Rating", "Climate_Rating")
+
+# Converting columns to factors 
+
+Typical_Employee_Survey_Data$Gender <- as.factor(Typical_Employee_Survey_Data$Gender)
+
+Typical_Employee_Survey_Data$Satisfaction_Rating <- as.factor(Typical_Employee_Survey_Data$Satisfaction_Rating)
+
+Typical_Employee_Survey_Data$Job_Priority <- as.factor(Typical_Employee_Survey_Data$Job_Priority)
+
+Typical_Employee_Survey_Data$Promotion_Outlook <- as.factor(Typical_Employee_Survey_Data$Promotion_Outlook)
+
+Typical_Employee_Survey_Data$Autonomy_Rating <- as.factor(Typical_Employee_Survey_Data$Autonomy_Rating)
+
+Typical_Employee_Survey_Data$Budget_Involvement <- as.factor(Typical_Employee_Survey_Data$Budget_Involvement)
+
+Typical_Employee_Survey_Data$Pride_Rating <- as.factor(Typical_Employee_Survey_Data$Pride_Rating)
+
+Typical_Employee_Survey_Data$Loyalty_Rating <- as.factor(Typical_Employee_Survey_Data$Loyalty_Rating)
+
+Typical_Employee_Survey_Data$Climate_Rating <- factor(Typical_Employee_Survey_Data$Climate_Rating, levels = c(1,2,3,4,5))
+
+# 5 Number Summary and box plots for numerical columns
+
+summary(Typical_Employee_Survey_Data)
+
+boxplot(Typical_Employee_Survey_Data$Age, main = "Age of Employees",col = "red")
+
+boxplot(Typical_Employee_Survey_Data$Years_Employed, main = "Employement Length of Employees", col = "red")
+
+# Data Visualizations 
+
+hist(Typical_Employee_Survey_Data$Age, main = "Age Distribution of Employees", xlab = "Age", ylab="# of Employees", breaks=20, col="red") 
+
+print('The histogram above shows that the ages of the randomly sampled employees are skewed slightly to the right, with the median age around 38. There are a few outliers pulling the mean up, with the oldest respondent being 64.')
+
+pie(summary(Typical_Employee_Survey_Data$Gender), main = "Gender Distribution of Employees", labels=c("male", "female"), col=c("lightblue", "pink"))
+
+print("The piechart above shows that a majority of the randomly sampled employees are male, approximately 57%. A larger sample should be surveyed to determine if this sample is indicative of the firm as a whole.")
+
+labels <- c("Very Satisfied", "Moderately Satisfied", "A Little Dissatisfied", "Very Dissatisfied")
+barplot(summary(Typical_Employee_Survey_Data$Satisfaction_Rating), names.arg = labels, xlab="Satisfaction Level", ylab = "# of Employees", col="red", cex.names=0.65)
+
+print("The barchart above shows that a majority of the randomly sampled employees are very satisfied with their job. This suggests high levels of satisfaction at the firm as a whole.")
+
+labels <- c("High Income", "Job Security", "Flexible Hours", "Promotion Opp", "Enjoyable Work")
+barplot(summary(Typical_Employee_Survey_Data$Job_Priority), names.arg = labels, xlab="Job Priority", ylab = "# of Employees", col="red", cex.names=0.65)
+
+print("The barchart above shows that a majority of the randomly sampled employees feel that enjoying their work is most important to them, with the next priority being high income. This suggests a similar sentiment across the firm as a whole.")
+
+hist(Typical_Employee_Survey_Data$Years_Employed, main="Employment Length Distribution of Employees", xlab = "Years Employed", ylab="# of Employees", breaks=25, col="red")
+
+print("The histogram above shows that a majority of the randomly sampled employees have been at the firm for 5 years or less. The data is skewed to the right. There are a few outliers pulling the mean up, with the longest employment length being 52 years.")
+
+labels <- c("Very Likely", "Likely", "Not Sure", "Unlikely", "Very Unlikely")
+barplot(summary(Typical_Employee_Survey_Data$Promotion_Outlook), names.arg = labels, xlab="Promotion Outlook", ylab = "# of Employees", col="red", cex.names=0.8)
+
+print("The barchart above shows that a majority of the randomly sampled employees believe their chance of recieving a promotion is very unlikely, with about an equal response rate of likely and unlikely. This suggests a range of opinions regarding the likelihood of promotion at the firm as a whole.")
+
+labels <- c("Always", "Much of the time", "Sometimes", "Never")
+barplot(summary(Typical_Employee_Survey_Data$Autonomy_Rating), names.arg = labels, xlab="Autonomy Level", ylab = "# of Employees", col="red", cex.names=0.8 )
+
+print("The barchart above shows that a majority of the randomly sampled employees feel that they take part in decision-making that affects their work. This suggests a similar sentiment across the firm as a whole.")
+
+labels <- c("Yes", "No")
+barplot(summary(Typical_Employee_Survey_Data$Budget_Involvement), names.arg = labels, xlab="Budget Involvement", ylab = "# of Employees", col="red", cex.names=0.8) 
+
+print("The barchart above shows that a slight majority of the randomly sampled employees are involved in budgetary decisions. This may suggest a similar situation across the firm as a whole, but since the numbers are close, more data may need to be collected.")
+
+labels <- c("Very Proud", "Somewhat Proud", "Indifferent", "Not At All Proud")
+barplot(summary(Typical_Employee_Survey_Data$Pride_Rating), names.arg = labels, xlab="Pride Level", ylab = "# of Employees", col="red", cex.names=0.65) 
+
+print("The barchart above shows that a majority of the randomly sampled employees feel somewhat proud to work for the firm. This suggests a similar sentiment across the firm as a whole, which may be a factor to examine more closely.") 
+
+labels <- c("Very Likely", "Likely", "Not Sure", "Unlikely", "Very Unlikely")
+barplot(summary(Typical_Employee_Survey_Data$Loyalty_Rating), names.arg = labels, xlab="Willingness to Turn Down a Job with More Pay", ylab = "# of Employees", col="red", cex.names=0.8) 
+
+print("The barchart above shows that a majority of the randomly sampled employees would not turn down a job with more pay if it means leaving the firm. This suggests a similar sentiment across the firm as a whole, which may be a factor to examine more closely.") 
+
+labels <- c("Very Good", "Good", "So So", "Bad", "Very Bad")
+barplot(summary(Typical_Employee_Survey_Data$Climate_Rating), names.arg = labels, xlab="Workplace Climate", ylab = "# of Employees", col="red", cex.names=0.8) 
+
+print("The barchart above shows that a majority of the randomly sampled employees believe the workplace climate is very good and good. This suggests a similar sentiment across the firm as a whole. However, almost 20% of respondents answered so-so and bad, which may be a factor to examine more closely.") 
+
+# Scatter plots 
+
+plot(jitter(Typical_Employee_Survey_Data$Age), jitter(Typical_Employee_Survey_Data$Years_Employed), abline(lm(Typical_Employee_Survey_Data$Years_Employed ~ Typical_Employee_Survey_Data$Age), col="red"), main= "Relationship between Age & Employment Length" , xlab="Age", ylab="Years Employed", col="black")
+
+print("The scatterplot above shows a positive relationship between age and employment length. In other words, as employees age, they are more likely to have a longer tenure with the firm.") 
+
+plot(jitter(as.numeric(Typical_Employee_Survey_Data$Promotion_Outlook)), jitter(as.numeric(Typical_Employee_Survey_Data$Pride_Rating)), main= "Relationship between Promotion Outlook & Pride", xlab="Promotion Outlook", ylab="Pride Level", col="black")
+
+print("The scatterplot above shows that most employees are only somewhat proud to work at the firm (2), regardless of their likelihood of being promoted. Interestingly, there is a cluster in the bottom right corner that indicates a subsect of employees that are very proud to work at the firm (1) but have little likelihood of being promoted (5). This is a group of employees to potentially explore further.") 
+
+plot(jitter(as.numeric(Typical_Employee_Survey_Data$Satisfaction_Rating)), jitter(as.numeric(Typical_Employee_Survey_Data$Autonomy_Rating)), main= "Relationship between Satisfaction and Autonomy Levels", xlab="Satisfaction Level", ylab="Autonomy Level" , col="black")
+
+print("The scatterplot above shows that most employees who are satisfied (1) and moderately satisfied (2) with their jobs also have autonomy much of the time (2) or sometimes (3). There are some noticeable outliers which may be a result of personal experiences or preferences.") 
+
+
+```
+
