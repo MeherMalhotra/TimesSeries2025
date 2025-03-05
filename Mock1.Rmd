@@ -1,0 +1,101 @@
+---
+title: "Mock_Midterm"
+author: "Meher Malhotra"
+date: "2025-03-03"
+output: html_document
+---
+
+```{r}
+
+library(fpp2)
+
+USAus_arrivals <- arrivals [, "US"]
+plot(arrivals [, "US"], ylab="Arrivals") 
+acf(USAus_arrivals)
+
+```
+The time series exhibits a positive trend, though it appears to have leveled off after 2000. The data appears to be seasonal as well. The Acf supports these initial visual observations, with decreasing significance as the lags increase and spikes to represent seasonality. 
+
+``` {r}
+
+summary(USAus_arrivals)
+boxplot(USAus_arrivals, main="Boxplot of US/Australia Arrivals")
+
+```
+The average number of arrivals from the US to Australia falls around 85,000 per quarter. Since the median and mean are approximately the same, there is no skewness in the data. The boxplot supports this, suggesting there is a pretty even distribution. 
+
+``` {r}
+
+ets_decomp <- ets(USAus_arrivals)
+plot(ets_decomp)
+
+stl_decomp <- stl(USAus_arrivals, s.window="periodic")
+plot(stl_decomp, main= "Decompostion by Stl Method")
+
+de_decomp <- decompose(USAus_arrivals)
+plot(de_decomp)  
+
+```
+All the plots show seasonality. The decomposition model is additive. 
+
+``` {r}
+
+de_decomp$seasonal 
+
+```
+The seasonal quarterly indices are as follows:
+Q1: 6.784749 / Q2: -7.969292 / Q3: -4.717247 / Q4: 5.901790
+
+The time series value is highest in Q1 and lowest in Q2. Q1 might be most popular for American tourists on vacation in Australia, and Q2 might represent when everyone is back at school/work. 
+
+``` {r}
+
+de_adjustment <- seasadj(de_decomp)
+plot(de_adjustment, main="Seasonal Adjustment")
+
+plot(USAus_arrivals)
+lines(de_adjustment, col="red")
+
+```
+Seasonality does contribute to fluctuations in the time series, especially from the mid 90's to 2000. The black line indicates the actual data and the red line indicates the seasonally adjusted data, or the underlying trend. 
+
+``` {r}
+
+naive_forecast <- naive(USAus_arrivals, h=4)
+plot(naive_forecast)
+
+naive_residuals <- naive_forecast$residuals
+plot(naive_residuals)
+```
+The plot of the residuals indicate that the errors are not independent or random. This means some seasonal or cyclical trend has not been accounted for. 
+
+``` {r}
+
+hist(naive_residuals)
+```
+The histogram of the residuals indicate that the residuals are very slightly left-skewed (mean is less than median). A majority of the errors fall between 0 and 10. This suggests the model is underestimating the data.   
+
+``` {r}
+plot(naive_forecast$fitted, main="Fitted Values vs. Residuals")
+lines(naive_residuals, col ="red")
+```
+This plot indicates that the model generally captures all the data points with minimal residuals. Where the residuals spike maybe the model wasn't able to forecast these abrupt changes.
+
+```{r}
+plot(USAus_arrivals, main="Actual Values vs. Residuals")
+lines(naive_residuals, col="red")
+```
+This plot again indicates where the residuals seem to be highest, particularly between 1985 and 1990. It will be important to take a closer look at this period to determine the cause of the errors. 
+```{r}
+Acf(naive_residuals)
+```
+The Acf of residuals shows that there is high correlation (whether positive or negative) every two lags. This confirms the seasonality of the data and its errors. The naive model does not account for seasonality in the data, so this makes sense. 
+```{r}
+accuracy(naive_forecast)
+```
+The MAPE is quite high at 11.8%. This model is not as accurate as it could be.
+```{r}
+naive_forecast
+plot(naive_forecast)
+```
+This forecasting technique is not very accurate. It predicts aproximately 106,540 arrivals from the US to Australia, as this is the last value of the dataset (2012 Q3). The naive model is not the best model to use here because it does not account for trend or seasonality at all. 
